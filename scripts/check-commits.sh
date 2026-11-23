@@ -13,7 +13,7 @@ fi
 
 subjects=$(git log --format='%h %s' "$range")
 invalid=$(printf '%s\n' "$subjects" | awk '
-  NF && $0 !~ /^[0-9a-f]+ (build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([[:alnum:]_./-]+\))?!?: [^[:space:]]/ {
+  NF && $0 !~ /^[0-9a-f]+ (build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([[:alnum:]_.\/-]+\))?!?: [^[:space:]]/ {
     print
   }
 ')

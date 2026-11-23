@@ -1,0 +1,26 @@
+$ docker run --rm -v "$PWD:/repo:ro" -w /repo rhysd/actionlint:1.7.7
+.github/workflows/verify.yml:36:56: context "job" is not allowed here. available contexts are "github", "inputs", "matrix", "needs", "secrets", "strategy", "vars". see https://docs.github.com/en/actions/learn-github-actions/contexts#context-availability for more details [expression]
+   |
+36 |       DATABASE_URL: postgresql://lab:lab@127.0.0.1:${{ job.services.postgres.ports[5432] }}/repairs
+   |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.github/workflows/verify.yml:36:84: property access of object must be type of string but got "number" [expression]
+   |
+36 |       DATABASE_URL: postgresql://lab:lab@127.0.0.1:${{ job.services.postgres.ports[5432] }}/repairs
+   |                                                                                    ^~~~~
+.github/workflows/verify.yml:100:9: shellcheck reported issue in this script: SC2034:warning:3:1: attempt appears unused. Verify use (or export if used externally) [shellcheck]
+    |
+100 |         run: |
+    |         ^~~~
+actionlint exit=1
+$ sh scripts/check-commits.sh 0000000000000000000000000000000000000000 HEAD
+awk: nonterminated character class ^[0-9a-f]+ (build|ch
+ source line number 2
+ context is
+	  NF && $0 !~ /^[0-9a-f]+ >>>  (build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([[:alnum:]_./ <<< 
+check-commits exit=2
+
+$ docker run --rm -v "$PWD:/repo:ro" -w /repo rhysd/actionlint:1.7.7
+actionlint exit=0
+$ sh scripts/check-commits.sh 0000000000000000000000000000000000000000 HEAD
+Conventional Commit subjects passed for HEAD
+check-commits exit=0

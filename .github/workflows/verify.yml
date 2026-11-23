@@ -32,8 +32,6 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
-    env:
-      DATABASE_URL: postgresql://lab:lab@127.0.0.1:${{ job.services.postgres.ports[5432] }}/repairs
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -49,6 +47,8 @@ jobs:
         run: sh scripts/ci-negative.sh
       - run: npm run check
       - run: make test
+        env:
+          DATABASE_URL: postgresql://lab:lab@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/repairs
       - name: Conventional Commits
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before || '0000000000000000000000000000000000000000' }}
@@ -100,7 +100,7 @@ jobs:
         run: |
           set -euo pipefail
           test -n "$STAGING_URL"
-          for attempt in {1..60}; do
+          for _attempt in {1..60}; do
             sha=$(curl -fsS --max-time 5 "${STAGING_URL%/}/version" | jq -r .sha || true)
             if [[ "$sha" == "$GITHUB_SHA" ]] && curl -fsS --max-time 5 "${STAGING_URL%/}/ready"; then
               printf '\nStaging serves %s\n' "$sha"
