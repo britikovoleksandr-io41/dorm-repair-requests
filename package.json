@@ -1,0 +1,26 @@
+{
+  "name": "dorm-repair-requests",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.15 <26"
+  },
+  "scripts": {
+    "start": "node dist/main.js",
+    "build": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "smoke": "node --test test/smoke.test.js",
+    "check": "npm run format:check && npm run lint && npm run build && npm run smoke",
+    "hooks:install": "sh scripts/install-hooks.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.3",
+    "eslint": "9.39.3",
+    "globals": "17.3.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  }
+}

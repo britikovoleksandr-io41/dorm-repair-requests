@@ -1,0 +1,15 @@
+$ git commit -m "test: intentionally violate formatting for hook verification"
+
+> dorm-repair-requests@0.1.0 check
+> npm run format:check && npm run lint && npm run build && npm run smoke
+
+
+> dorm-repair-requests@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+[warn] src/hook-negative.js
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.
+exit=1
+$ git log -1 --format=%h
+5a635b7

@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+cd "$(git rev-parse --show-toplevel)"
+git_dir=$(git rev-parse --absolute-git-dir)
+snapshot=$(mktemp -d "$git_dir/push-check.XXXXXX")
+trap 'rm -rf "$snapshot"' EXIT
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$local_ref" in
+    refs/heads/*)
+      mkdir "$snapshot/tree"
+      git archive --output="$snapshot/tree.tar" "$local_sha"
+      tar -xf "$snapshot/tree.tar" -C "$snapshot/tree"
+      sh scripts/check-snapshot.sh "$snapshot/tree"
+      rm -rf "$snapshot/tree"
+      ;;
+  esac
+done

@@ -1,0 +1,7 @@
+dist/
+node_modules/
+evidence/
+.lab-local/
+reports/
+coverage/
+package-lock.json

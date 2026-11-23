@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+cd "$(git rev-parse --show-toplevel)"
+snapshot=$(mktemp -d "$(git rev-parse --absolute-git-dir)/commit-check.XXXXXX")
+trap 'rm -rf "$snapshot"' EXIT
+git checkout-index --all --prefix="$snapshot/"
+sh scripts/check-snapshot.sh "$snapshot"
