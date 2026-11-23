@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutate": ["src/policy.js"],
+  "testRunner": "command",
+  "commandRunner": { "command": "node --test test/policy.unit.test.js" },
+  "coverageAnalysis": "off",
+  "concurrency": 4,
+  "reporters": ["clear-text", "json", "html"]
+}

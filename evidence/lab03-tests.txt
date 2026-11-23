@@ -1,0 +1,62 @@
+$ make test
+npm run build
+
+> dorm-repair-requests@0.1.0 build
+> tsc
+
+node --test --experimental-test-coverage '--test-coverage-include=src/policy.js' --test-coverage-branches=100 test/policy.unit.test.js
+✔ open requests can be claimed by a technician (0.634291ms)
+✔ assigned technician resolves a request with a note (0.3485ms)
+✔ residents cannot claim a request (0.537125ms)
+✔ another technician cannot resolve an assigned request (0.047959ms)
+✔ claim cannot change a request in in_progress (0.043458ms)
+✔ claim cannot change a request in resolved (0.037833ms)
+✔ resolve cannot change a request in open (0.034125ms)
+✔ resolve cannot change a request in resolved (0.030708ms)
+✔ reopen cannot change a request in in_progress (0.034959ms)
+✔ reopen cannot change a request in open (0.02675ms)
+✔ assigned technician must include a repair note (0.051708ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.794541
+ℹ start of coverage report
+ℹ -----------------------------------------------------------
+ℹ file       | line % | branch % | funcs % | uncovered lines
+ℹ -----------------------------------------------------------
+ℹ src        |        |          |         | 
+ℹ  policy.js | 100.00 |   100.00 |  100.00 | 
+ℹ -----------------------------------------------------------
+ℹ all files  | 100.00 |   100.00 |  100.00 | 
+ℹ -----------------------------------------------------------
+ℹ end of coverage report
+npm run smoke
+
+> dorm-repair-requests@0.1.0 smoke
+> node --test test/smoke.test.js
+
+✔ built HTTP server answers GET /health and rejects unknown routes (13.560375ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.526875
+sh scripts/with-db.sh node --test --test-concurrency=1 test/concurrency.integration.test.js test/postgres-verification.test.js test/e2e.test.js
+✔ both concurrent claims reach PostgreSQL before release and only one event is written (184.983625ms)
+✔ HTTP clients complete a repair, then read its persisted queue entry and history (278.692083ms)
+✔ PostgreSQL API works, correlates SQL results, survives lost source (5218.311083ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5915.324

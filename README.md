@@ -53,3 +53,7 @@ npm run verify:db
 ```
 
 `verify:db` піднімає ізольований PostgreSQL у Docker, якщо `DATABASE_URL` не задано. За наявності URL вказуйте окрему тестову БД. Контракт описано у [spec.md](spec.md).
+
+## Тести
+
+`make test` збирає проєкт, перевіряє гілки правил переходу, запускає smoke, інтеграційні та E2E тести. Потрібен Docker або чиста БД через `DATABASE_URL`. `make mutation` перевіряє тести правил переходу через Stryker і формує JSON та HTML у `reports/mutation/`. Перший і повторний прогони розібрано в [аудиті тестів](evidence/lab03-audit.md).

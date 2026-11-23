@@ -1,0 +1,39 @@
+$ make mutation
+npm exec -- stryker run
+[32m21:16:45 (31451) INFO ProjectReader[39m Found 1 of 60 file(s) to be mutated.
+[32m21:16:45 (31451) INFO Instrumenter[39m Instrumented 1 source file(s) with 40 mutant(s)
+[32m21:16:45 (31451) INFO ConcurrencyTokenProvider[39m Creating 4 test runner process(es).
+[32m21:16:45 (31451) INFO DryRunExecutor[39m Starting initial test run (command test runner with "off" coverage analysis). This may take a while.
+[32m21:16:45 (31451) INFO DryRunExecutor[39m Initial test run succeeded. Ran 1 tests in 0 seconds (net 127 ms, overhead 0 ms).
+
+All tests
+  ✓ All tests (killed 37)
+
+[Survived] ConditionalExpression
+src/policy.js:14:9
+-       if (!note) {
++       if (false) {
+
+[Survived] BlockStatement
+src/policy.js:14:16
+-       if (!note) {
+-         throw new AppError(400, 'repair_note_required');
+-       }
++       if (!note) {}
+
+[Survived] StringLiteral
+src/policy.js:15:31
+-         throw new AppError(400, 'repair_note_required');
++         throw new AppError(400, "");
+
+Ran 1.00 tests per mutant on average.
+-----------|------------------|----------|-----------|------------|----------|----------|
+           | % Mutation score |          |           |            |          |          |
+File       |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+-----------|--------|---------|----------|-----------|------------|----------|----------|
+All files  |  92.50 |   92.50 |       37 |         0 |          3 |        0 |        0 |
+ policy.js |  92.50 |   92.50 |       37 |         0 |          3 |        0 |        0 |
+-----------|--------|---------|----------|-----------|------------|----------|----------|
+[32m21:16:47 (31451) INFO JsonReporter[39m Your report can be found at: [вилучено приватний шлях]/reports/mutation/mutation.json
+[32m21:16:47 (31451) INFO HtmlReporter[39m Your report can be found at: [вилучено приватний шлях]/reports/mutation/mutation.html
+[32m21:16:47 (31451) INFO MutationTestExecutor[39m Done in 1 second.

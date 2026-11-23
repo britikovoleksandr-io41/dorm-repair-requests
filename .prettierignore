@@ -5,3 +5,4 @@ evidence/
 reports/
 coverage/
 package-lock.json
+.stryker-tmp/
