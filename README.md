@@ -43,11 +43,13 @@ npm start
 
 `GET /health` перевіряє, що HTTP-процес відповідає. Код, технічна документація й перевірки підготовлені за участю OpenAI Codex на основі опису проєкту та завдань курсу. Робочі інженерні рішення потребують погодження студента.
 
-Для прототипу налаштуйте тестові токени через `ACTOR_TOKENS`:
+Для PostgreSQL вкажіть `DATABASE_URL`, зберіть код, застосуйте схему й налаштуйте `ACTOR_TOKENS`. Перед запуском додайте до `users` ID і ролі всіх налаштованих акторів. Значення токенів зберігайте в зовнішній конфігурації. Повний API на даних у пам'яті доступний у локальній гілці `feature/lab-02-static-api`.
 
 ```sh
-export ACTOR_TOKENS="$(node --input-type=module -e 'import { actors } from "./test/actors.js"; console.log(JSON.stringify(Object.values(actors)))')"
+npm run build
+npm run migrate
 npm start
+npm run verify:db
 ```
 
-Наприклад, `curl -H 'Authorization: Bearer fixture_resident_one_0000001' http://127.0.0.1:3000/requests`. Контракт описано у [spec.md](spec.md).
+`verify:db` піднімає ізольований PostgreSQL у Docker, якщо `DATABASE_URL` не задано. За наявності URL вказуйте окрему тестову БД. Контракт описано у [spec.md](spec.md).

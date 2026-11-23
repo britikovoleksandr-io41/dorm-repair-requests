@@ -1,15 +1,35 @@
 import { createAuthenticator } from './auth.js';
 import { makeLogger } from './context.js';
+import { createDatabase } from './database.js';
 import { createHttpServer } from './http.js';
-import { memoryRepository } from './memory.js';
+import { postgresRepository } from './postgres.js';
 import { repairService } from './service.js';
 
 const log = makeLogger();
 const actors = JSON.parse(process.env.ACTOR_TOKENS ?? '[]');
 const authenticate = createAuthenticator(actors);
-const service = repairService(memoryRepository(log), log);
-const server = createHttpServer({ authenticate, service, log });
+const db = createDatabase(process.env.DATABASE_URL, log);
+try {
+  await db.query('startup.ping', 'SELECT now()');
+  const { rows } = await db.query(
+    'startup.actors',
+    'SELECT id, role FROM users WHERE id = ANY($1)',
+    [actors.map(({ id }) => id)],
+  );
+  const roles = new Map(rows.map(({ id, role }) => [id, role]));
+  if (actors.some(({ id, role }) => roles.get(id) !== role)) {
+    throw new Error('Actor configuration does not match database users');
+  }
+} catch (error) {
+  await db.close();
+  throw error;
+}
 
+const service = repairService(postgresRepository(db), log);
+const server = createHttpServer({ authenticate, service, log });
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.once(signal, () => server.close(() => void db.close()));
+}
 server.listen(
   Number(process.env.PORT ?? 3000),
   process.env.HOST ?? '127.0.0.1',

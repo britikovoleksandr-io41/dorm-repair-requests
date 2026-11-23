@@ -1,0 +1,14 @@
+$ npm run verify:db
+
+> dorm-repair-requests@0.1.0 verify:db
+> sh scripts/with-db.sh node --test test/postgres-verification.test.js
+
+✔ PostgreSQL API works, correlates SQL results, survives lost source (5220.623625ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5310.082375
