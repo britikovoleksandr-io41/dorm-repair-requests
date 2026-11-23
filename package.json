@@ -32,5 +32,13 @@
   },
   "workspaces": [
     "packages/repair-queue"
-  ]
+  ],
+  "overrides": {
+    "@stryker-mutator/core": {
+      "minimatch": "11.0.9"
+    },
+    "typed-rest-client": {
+      "qs": "6.17.1"
+    }
+  }
 }

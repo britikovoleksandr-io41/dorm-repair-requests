@@ -71,3 +71,5 @@ curl -H 'Authorization: Bearer fixture_resident_one_0000001' http://127.0.0.1:30
 ## Навантаження
 
 `make load` і `make profile` створюють окрему базу Docker, засівають однакові дані й показують три повтори. Для вимірів програма перевіряє SHA через `/version`. На наявній базі після міграцій можна окремо запустити `npm run db:indexes` з відповідним `DATABASE_URL`. Публічний контракт читання черги входить до workspace `@dorm/repair-queue`.
+
+[Базова лінія, повторні виміри та аналіз планів](evidence/lab05-analysis.md).

@@ -1,0 +1,129 @@
+$ docker build --build-arg APP_SHA=4d4a25fc98247f23675891a5e092459311df0a1e -t dorm-repair-requests:lab05-4d4a25f .
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.11kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24-bookworm-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 312B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 149.31kB done
+#4 DONE 0.0s
+
+#5 [build 1/9] FROM docker.io/library/node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e
+#5 resolve docker.io/library/node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e 0.0s done
+#5 DONE 0.0s
+
+#6 [build 2/9] WORKDIR /app
+#6 CACHED
+
+#7 [build 3/9] COPY package.json package-lock.json ./
+#7 DONE 0.0s
+
+#8 [build 4/9] COPY packages/repair-queue/package.json ./packages/repair-queue/
+#8 DONE 0.0s
+
+#9 [build 5/9] RUN npm ci --no-audit --no-fund
+#9 10.55 npm warn deprecated eslint@9.39.3: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+#9 16.82 
+#9 16.82 added 273 packages in 17s
+#9 16.82 npm notice
+#9 16.82 npm notice New major version of npm available! 11.19.0 -> 12.2.3
+#9 16.82 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#9 16.82 npm notice To update run: npm install -g npm@12.2.3
+#9 16.82 npm notice
+#9 DONE 16.9s
+
+#10 [build 6/9] COPY tsconfig.json ./
+#10 DONE 0.0s
+
+#11 [build 7/9] COPY src ./src
+#11 DONE 0.0s
+
+#12 [build 8/9] COPY packages ./packages
+#12 DONE 0.0s
+
+#13 [build 9/9] RUN npm run build && npm prune --omit=dev --no-audit --no-fund
+#13 0.128 
+#13 0.128 > dorm-repair-requests@0.1.0 build
+#13 0.128 > tsc -p packages/repair-queue && tsc
+#13 0.128 
+#13 5.031 
+#13 5.031 removed 258 packages in 4s
+#13 DONE 5.0s
+
+#14 [runtime 3/8] COPY --from=build /app/package.json ./
+#14 DONE 0.0s
+
+#15 [runtime 4/8] COPY --from=build /app/node_modules ./node_modules
+#15 DONE 0.0s
+
+#16 [runtime 5/8] COPY --from=build /app/dist ./dist
+#16 DONE 0.0s
+
+#17 [runtime 6/8] COPY --from=build /app/packages/repair-queue/package.json ./packages/repair-queue/
+#17 DONE 0.0s
+
+#18 [runtime 7/8] COPY --from=build /app/packages/repair-queue/dist ./packages/repair-queue/dist
+#18 DONE 0.0s
+
+#19 [runtime 8/8] COPY migrations ./migrations
+#19 DONE 0.0s
+
+#20 exporting to image
+#20 exporting layers 0.1s done
+#20 exporting manifest sha256:00f8fd79b6d493f88bcdd0504966f0c9058abd53abe0fa245fb04f0dbfb17448 done
+#20 exporting config sha256:aef2d2350b729c65171f253aa04b0e575919441fe992e347d58e6404f236d687 done
+#20 exporting attestation manifest sha256:05b52c928d16a9eed671f87cea0c9a83a5218128a0f648ce5d19f54313ff4a17 done
+#20 exporting manifest list sha256:d3e4e9a5165c7e22af3b38a5f14d5be92690927c6696755cad777e7812124885 done
+#20 naming to docker.io/library/dorm-repair-requests:lab05-4d4a25f done
+#20 unpacking to docker.io/library/dorm-repair-requests:lab05-4d4a25f 0.0s done
+#20 DONE 0.1s
+$ sh scripts/verify-container.sh dorm-repair-requests:lab05-4d4a25f 4d4a25fc98247f23675891a5e092459311df0a1e
+{"operation":"startup.ping","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"startup.ping","rows":1,"durationMs":9.802041,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"event":"db.connect.start","businessProcessId":null,"initiator":null}
+{"event":"db.connect.finish","businessProcessId":null,"initiator":null}
+{"operation":"transaction.begin","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"transaction.begin","rows":null,"durationMs":0.19250000000000256,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"migrations.lock","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"migrations.lock","rows":1,"durationMs":0.3168329999999955,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"migrations.bookkeeping","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"migrations.bookkeeping","rows":null,"durationMs":1.7843749999999972,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"migrations.lookup","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"migrations.lookup","rows":0,"durationMs":0.6179580000000016,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"migrations.apply.001-initial.sql","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"migrations.apply.001-initial.sql","durationMs":3.558458999999999,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"migrations.record","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"migrations.record","rows":1,"durationMs":0.18541700000000105,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"transaction.commit","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"transaction.commit","rows":null,"durationMs":0.40529200000000287,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+{"operation":"startup.actors","event":"db.query.start","businessProcessId":null,"initiator":null}
+{"operation":"startup.actors","rows":0,"durationMs":0.42858299999999616,"event":"db.query.finish","businessProcessId":null,"initiator":null}
+file:///app/dist/main.js:22
+        throw new Error('Actor configuration does not match database users');
+              ^
+
+Error: Actor configuration does not match database users
+    at file:///app/dist/main.js:22:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.20.0
+      name       
+-----------------
+ 001-initial.sql
+(1 row)
+
+INSERT 0 4
+GET /ready {"status":"ready"}
+GET /version {"sha":"4d4a25fc98247f23675891a5e092459311df0a1e"}
+Container HTTP repair journey passed
+GET /ready with PostgreSQL stopped: 503
+GET /health with PostgreSQL stopped: 200
+verify-container exit=0
