@@ -1,14 +1,17 @@
-import { createServer } from 'node:http';
+import { createAuthenticator } from './auth.js';
+import { makeLogger } from './context.js';
+import { createHttpServer } from './http.js';
+import { memoryRepository } from './memory.js';
+import { repairService } from './service.js';
 
-const port = Number(process.env.PORT ?? 3000);
+const log = makeLogger();
+const actors = JSON.parse(process.env.ACTOR_TOKENS ?? '[]');
+const authenticate = createAuthenticator(actors);
+const service = repairService(memoryRepository(log), log);
+const server = createHttpServer({ authenticate, service, log });
 
-createServer((req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (req.method === 'GET' && req.url === '/health') {
-    res.end(JSON.stringify({ status: 'ok' }));
-    return;
-  }
-  res.writeHead(404).end(JSON.stringify({ error: 'not_found' }));
-}).listen(port, process.env.HOST ?? '127.0.0.1', function () {
-  console.log(JSON.stringify({ port: this.address().port }));
-});
+server.listen(
+  Number(process.env.PORT ?? 3000),
+  process.env.HOST ?? '127.0.0.1',
+  () => log('server.listening', { port: server.address().port }),
+);

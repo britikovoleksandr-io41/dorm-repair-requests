@@ -42,3 +42,12 @@ npm start
 ```
 
 `GET /health` перевіряє, що HTTP-процес відповідає. Код, технічна документація й перевірки підготовлені за участю OpenAI Codex на основі опису проєкту та завдань курсу. Робочі інженерні рішення потребують погодження студента.
+
+Для прототипу налаштуйте тестові токени через `ACTOR_TOKENS`:
+
+```sh
+export ACTOR_TOKENS="$(node --input-type=module -e 'import { actors } from "./test/actors.js"; console.log(JSON.stringify(Object.values(actors)))')"
+npm start
+```
+
+Наприклад, `curl -H 'Authorization: Bearer fixture_resident_one_0000001' http://127.0.0.1:3000/requests`. Контракт описано у [spec.md](spec.md).
