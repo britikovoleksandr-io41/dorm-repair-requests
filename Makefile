@@ -8,3 +8,7 @@ test:
 
 mutation:
 	npm exec -- stryker run
+
+.PHONY: ci-negative
+ci-negative:
+	sh scripts/ci-negative.sh

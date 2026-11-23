@@ -9,10 +9,23 @@ function send(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
-export function createHttpServer({ authenticate, service, log }) {
+export function createHttpServer({
+  authenticate,
+  service,
+  log,
+  ready,
+  version,
+}) {
   async function dispatch(req, res, url) {
     if (req.method === 'GET' && url.pathname === '/health') {
       return send(res, 200, { status: 'ok' });
+    }
+    if (req.method === 'GET' && url.pathname === '/ready') {
+      await ready();
+      return send(res, 200, { status: 'ready' });
+    }
+    if (req.method === 'GET' && url.pathname === '/version') {
+      return send(res, 200, { sha: version });
     }
     if (url.pathname === '/requests' && req.method === 'POST') {
       const input = creation(
@@ -26,7 +39,7 @@ export function createHttpServer({ authenticate, service, log }) {
       return send(res, 200, await service.list(queueFilters(url.searchParams)));
     }
     const path =
-      /^\/requests\/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})(?:\/(claim|resolve))?$/i.exec(
+      /^\/requests\/([0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})(?:\/(claim|resolve))?$/.exec(
         url.pathname,
       );
     if (path) {

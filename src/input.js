@@ -5,7 +5,12 @@ const statuses = ['open', 'in_progress', 'resolved'];
 
 function text(input, name, max) {
   const value = typeof input[name] === 'string' ? input[name].trim() : '';
-  if (!value || value.length > max || value.includes('\0')) {
+  if (
+    !value ||
+    value.length > max ||
+    value.includes('\0') ||
+    !value.isWellFormed()
+  ) {
     throw new AppError(400, `invalid_${name}`);
   }
   return value;

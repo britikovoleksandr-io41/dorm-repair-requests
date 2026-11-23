@@ -1,0 +1,9 @@
+# Налаштування GitHub і staging
+
+1. У GitHub зробити `Verify` обов'язковим check гілки `main`, вимагати PR і заборонити force push. Для squash merge заголовок PR має бути Conventional Commit. За потреби вимагати актуальність PR відносно main.
+2. Для перевірки блокування merge на окремій тимчасовій гілці додати явно позначене порушення формату та відкрити PR. Зберегти URL червоного check і статус блокування. Видалити порушення наступним комітом і дочекатися зеленого check. Ручний запуск workflow з `negative=true` перевіряє поведінку CI, але сам по собі не встановлює required check на PR.
+3. Підготувати Render image-backed web service, PostgreSQL staging і GHCR image з дозволом на читання для Render, якщо пакет приватний. Для першого запуску застосувати міграції командою `node dist/migrate-cli.js` з опублікованого образу в середовищі staging та додати дозволених тестових користувачів до `users` окремою операцією. У Web Service задати `DATABASE_URL`, `ACTOR_TOKENS` і health check path `/ready`. Для одночасної роботи старої й нової версій потрібен план хостингу з відповідною підтримкою.
+4. У GitHub environment `staging` зберегти `RENDER_DEPLOY_HOOK` як secret, а `STAGING_URL` як variable. Образ Render має використовувати той самий шлях `ghcr.io/<owner>/<repository>`, що й workflow. Перший невдалий deploy через відсутню початкову інфраструктуру можна повторити після її налаштування.
+5. Після merge зберегти URL CI і deployment, порівняти `/version` із SHA коміту, перевірити `/ready` та пройти сценарій зі staging-токенами через публічний URL. Перевірити в історії deployment, що попередня версія обслуговувала запити, доки нова ставала готовою.
+
+Посилання на механізм вибору образу через hook. [Render Deploy Hooks](https://render.com/docs/deploy-hooks#deploying-a-specific-image).

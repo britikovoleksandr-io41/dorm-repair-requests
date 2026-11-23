@@ -2,6 +2,7 @@ import { createAuthenticator } from './auth.js';
 import { makeLogger } from './context.js';
 import { createDatabase } from './database.js';
 import { createHttpServer } from './http.js';
+import { migrate } from './migrations.js';
 import { postgresRepository } from './postgres.js';
 import { repairService } from './service.js';
 
@@ -11,6 +12,9 @@ const authenticate = createAuthenticator(actors);
 const db = createDatabase(process.env.DATABASE_URL, log);
 try {
   await db.query('startup.ping', 'SELECT now()');
+  if (process.env.AUTO_MIGRATE === '1') {
+    await migrate(db);
+  }
   const { rows } = await db.query(
     'startup.actors',
     'SELECT id, role FROM users WHERE id = ANY($1)',
@@ -26,7 +30,13 @@ try {
 }
 
 const service = repairService(postgresRepository(db), log);
-const server = createHttpServer({ authenticate, service, log });
+const server = createHttpServer({
+  authenticate,
+  service,
+  log,
+  version: process.env.APP_SHA ?? 'local',
+  ready: () => db.query('readiness.ping', 'SELECT 1'),
+});
 for (const signal of ['SIGTERM', 'SIGINT']) {
   process.once(signal, () => server.close(() => void db.close()));
 }

@@ -57,3 +57,7 @@ npm run verify:db
 ## Тести
 
 `make test` збирає проєкт, перевіряє гілки правил переходу, запускає smoke, інтеграційні та E2E тести. Потрібен Docker або чиста БД через `DATABASE_URL`. `make mutation` перевіряє тести правил переходу через Stryker і формує JSON та HTML у `reports/mutation/`. Перший і повторний прогони розібрано в [аудиті тестів](evidence/lab03-audit.md).
+
+## Контейнер і staging
+
+`docker build --build-arg APP_SHA="$(git rev-parse HEAD)" .` збирає образ. У контейнері застосовуються структурні міграції, `/ready` перевіряє залежність від БД, `/version` повертає SHA збірки. Для домашнього запуску та staging потрібні окремі PostgreSQL і токени. [Налаштування GitHub і staging](evidence/lab04-staging.md).

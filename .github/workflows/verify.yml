@@ -1,0 +1,112 @@
+name: Verify and deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      negative:
+        description: 'Intentional negative test: introduce an unformatted source file'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: lab
+          POSTGRES_PASSWORD: lab
+          POSTGRES_DB: repairs
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U lab -d repairs"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://lab:lab@127.0.0.1:${{ job.services.postgres.ports[5432] }}/repairs
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Intentional negative format test
+        if: github.event_name == 'workflow_dispatch' && inputs.negative
+        run: sh scripts/ci-negative.sh
+      - run: npm run check
+      - run: make test
+      - name: Conventional Commits
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before || '0000000000000000000000000000000000000000' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: sh scripts/check-commits.sh "$BASE" "$HEAD_SHA"
+      - name: Build container
+        run: docker build --build-arg "APP_SHA=$GITHUB_SHA" .
+
+  staging:
+    name: Deploy staging
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: staging
+    concurrency:
+      group: repair-staging
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Publish immutable image
+        id: image
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker build --build-arg "APP_SHA=$GITHUB_SHA" -t "$image:$GITHUB_SHA" .
+          docker push "$image:$GITHUB_SHA"
+          digest=$(docker image inspect "$image:$GITHUB_SHA" --format '{{range .RepoDigests}}{{println .}}{{end}}' | awk -v image="$image" 'index($0,image "@")==1{print;exit}')
+          test -n "$digest"
+          echo "reference=$digest" >> "$GITHUB_OUTPUT"
+      - name: Ask the staging service to deploy the digest
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          IMAGE: ${{ steps.image.outputs.reference }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_HOOK"
+          curl --fail --silent --output /dev/null --max-time 20             --get --data-urlencode "imgURL=$IMAGE" "$DEPLOY_HOOK"
+      - name: Wait for the deployed SHA and readiness
+        env:
+          STAGING_URL: ${{ vars.STAGING_URL }}
+        run: |
+          set -euo pipefail
+          test -n "$STAGING_URL"
+          for attempt in {1..60}; do
+            sha=$(curl -fsS --max-time 5 "${STAGING_URL%/}/version" | jq -r .sha || true)
+            if [[ "$sha" == "$GITHUB_SHA" ]] && curl -fsS --max-time 5 "${STAGING_URL%/}/ready"; then
+              printf '\nStaging serves %s\n' "$sha"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Staging did not become ready at $GITHUB_SHA" >&2
+          exit 1
