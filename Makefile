@@ -12,3 +12,10 @@ mutation:
 .PHONY: ci-negative
 ci-negative:
 	sh scripts/ci-negative.sh
+
+.PHONY: load profile
+load: export BENCH_MODE = load
+profile: export BENCH_MODE = profile
+load profile:
+	npm run build >&2
+	env -u DATABASE_URL sh scripts/with-db.sh node bench/run.js "$$BENCH_MODE"

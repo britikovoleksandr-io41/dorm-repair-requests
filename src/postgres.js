@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 const columns = `id, resident_id AS "residentId", assignee_id AS "assigneeId",
   location, category, description, status, created_at AS "createdAt"`;
 
-const queueSql = `SELECT ${columns} FROM repair_requests
+export const queueSql = `SELECT ${columns} FROM repair_requests
   WHERE ($1::text IS NULL OR resident_id = $1)
     AND ($2::text IS NULL OR status = $2)
     AND ($3::text IS NULL OR category = $3)
