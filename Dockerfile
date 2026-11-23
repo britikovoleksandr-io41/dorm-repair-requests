@@ -1,9 +1,11 @@
 FROM node:24-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
+COPY packages/repair-queue/package.json ./packages/repair-queue/
 RUN npm ci --no-audit --no-fund
 COPY tsconfig.json ./
 COPY src ./src
+COPY packages ./packages
 RUN npm run build && npm prune --omit=dev --no-audit --no-fund
 
 FROM node:24-bookworm-slim AS runtime
@@ -14,6 +16,8 @@ WORKDIR /app
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/packages/repair-queue/package.json ./packages/repair-queue/
+COPY --from=build /app/packages/repair-queue/dist ./packages/repair-queue/dist
 COPY migrations ./migrations
 USER node
 EXPOSE 3000

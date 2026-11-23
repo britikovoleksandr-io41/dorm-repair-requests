@@ -7,3 +7,9 @@
 !src/**
 !migrations/
 !migrations/**
+!packages/
+!packages/repair-queue/
+!packages/repair-queue/package.json
+!packages/repair-queue/tsconfig.json
+!packages/repair-queue/src/
+!packages/repair-queue/src/**

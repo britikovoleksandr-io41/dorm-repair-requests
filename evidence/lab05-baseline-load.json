@@ -1,0 +1,509 @@
+{
+  "revision": "c44bf8e8f81f08f9e04f6c703392cbf57d94b9d6",
+  "mode": "load",
+  "fixture": {
+    "requests": 120360,
+    "events": 156360,
+    "filtered": 5647,
+    "residentFiltered": 88,
+    "postgres": "PostgreSQL 17.11 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit"
+  },
+  "concurrency": 8,
+  "warmupReads": 32,
+  "env": {
+    "node": "v25.7.0",
+    "os": "darwin",
+    "release": "27.0.0",
+    "architecture": "arm64",
+    "cpu": "Apple M5 Pro",
+    "docker": "29.6.1"
+  },
+  "plans": {
+    "technicianQueue": {
+      "Plan": {
+        "Node Type": "Limit",
+        "Parallel Aware": false,
+        "Async Capable": false,
+        "Startup Cost": 4623.42,
+        "Total Cost": 4623.47,
+        "Plan Rows": 20,
+        "Plan Width": 131,
+        "Actual Startup Time": 5.841,
+        "Actual Total Time": 5.842,
+        "Actual Rows": 20,
+        "Actual Loops": 1,
+        "Shared Hit Blocks": 2621,
+        "Shared Read Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0,
+        "Plans": [
+          {
+            "Node Type": "Sort",
+            "Parent Relationship": "Outer",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 4623.32,
+            "Total Cost": 4637.57,
+            "Plan Rows": 5702,
+            "Plan Width": 131,
+            "Actual Startup Time": 5.838,
+            "Actual Total Time": 5.84,
+            "Actual Rows": 60,
+            "Actual Loops": 1,
+            "Sort Key": [
+              "created_at DESC",
+              "id DESC"
+            ],
+            "Sort Method": "top-N heapsort",
+            "Sort Space Used": 56,
+            "Sort Space Type": "Memory",
+            "Shared Hit Blocks": 2621,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0,
+            "Plans": [
+              {
+                "Node Type": "Seq Scan",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Relation Name": "repair_requests",
+                "Alias": "repair_requests",
+                "Startup Cost": 0,
+                "Total Cost": 4426.4,
+                "Plan Rows": 5702,
+                "Plan Width": 131,
+                "Actual Startup Time": 0.004,
+                "Actual Total Time": 5.22,
+                "Actual Rows": 5647,
+                "Actual Loops": 1,
+                "Filter": "((status = 'open'::text) AND (category = 'plumbing'::text))",
+                "Rows Removed by Filter": 114713,
+                "Shared Hit Blocks": 2621,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+              }
+            ]
+          }
+        ]
+      },
+      "Planning": {
+        "Shared Hit Blocks": 27,
+        "Shared Read Blocks": 1,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0
+      },
+      "Planning Time": 0.084,
+      "Triggers": [],
+      "Execution Time": 5.858
+    },
+    "residentQueue": {
+      "Plan": {
+        "Node Type": "Limit",
+        "Parallel Aware": false,
+        "Async Capable": false,
+        "Startup Cost": 2769.11,
+        "Total Cost": 2769.16,
+        "Plan Rows": 20,
+        "Plan Width": 131,
+        "Actual Startup Time": 0.795,
+        "Actual Total Time": 0.796,
+        "Actual Rows": 20,
+        "Actual Loops": 1,
+        "Shared Hit Blocks": 2009,
+        "Shared Read Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0,
+        "Plans": [
+          {
+            "Node Type": "Sort",
+            "Parent Relationship": "Outer",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 2769.01,
+            "Total Cost": 2769.27,
+            "Plan Rows": 103,
+            "Plan Width": 131,
+            "Actual Startup Time": 0.793,
+            "Actual Total Time": 0.794,
+            "Actual Rows": 60,
+            "Actual Loops": 1,
+            "Sort Key": [
+              "created_at DESC",
+              "id DESC"
+            ],
+            "Sort Method": "quicksort",
+            "Sort Space Used": 47,
+            "Sort Space Type": "Memory",
+            "Shared Hit Blocks": 2009,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0,
+            "Plans": [
+              {
+                "Node Type": "Bitmap Heap Scan",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Relation Name": "repair_requests",
+                "Alias": "repair_requests",
+                "Startup Cost": 108.79,
+                "Total Cost": 2765.57,
+                "Plan Rows": 103,
+                "Plan Width": 131,
+                "Actual Startup Time": 0.263,
+                "Actual Total Time": 0.777,
+                "Actual Rows": 88,
+                "Actual Loops": 1,
+                "Recheck Cond": "(resident_id = 'resident-1'::text)",
+                "Rows Removed by Index Recheck": 0,
+                "Filter": "((status = 'open'::text) AND (category = 'plumbing'::text))",
+                "Rows Removed by Filter": 2147,
+                "Exact Heap Blocks": 1988,
+                "Lossy Heap Blocks": 0,
+                "Shared Hit Blocks": 2009,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0,
+                "Plans": [
+                  {
+                    "Node Type": "Bitmap Index Scan",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Index Name": "repair_requests_resident_id_idempotency_key_key",
+                    "Startup Cost": 0,
+                    "Total Cost": 108.76,
+                    "Plan Rows": 2179,
+                    "Plan Width": 0,
+                    "Actual Startup Time": 0.154,
+                    "Actual Total Time": 0.154,
+                    "Actual Rows": 2235,
+                    "Actual Loops": 1,
+                    "Index Cond": "(resident_id = 'resident-1'::text)",
+                    "Shared Hit Blocks": 21,
+                    "Shared Read Blocks": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Dirtied Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "Planning": {
+        "Shared Hit Blocks": 0,
+        "Shared Read Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0
+      },
+      "Planning Time": 0.055,
+      "Triggers": [],
+      "Execution Time": 0.817
+    }
+  },
+  "results": [
+    {
+      "run": 1,
+      "scenarios": {
+        "technicianQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 7.563416999999845,
+            "p95": 9.251415999999608,
+            "p99": 10.04312499999969
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 7.059500000000014,
+            "p95": 8.655916999999988,
+            "p99": 9.318416000000013
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "residentQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 1.8711659999999029,
+            "p95": 2.5445830000003298,
+            "p99": 2.7806249999998727
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 1.41537500000004,
+            "p95": 2.1134160000000293,
+            "p99": 2.4165419999999926
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "claim": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.355583000000024,
+            "p95": 6.807374999999865,
+            "p99": 7.657542000000376
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 2.9727090000001226,
+            "p95": 4.443332000000055,
+            "p99": 5.808292000000165
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        },
+        "resolve": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.342333999999937,
+            "p95": 4.884292000000187,
+            "p99": 5.842208000000028
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 2.9393329999999764,
+            "p95": 4.359084000000166,
+            "p99": 5.388498999999911
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        }
+      },
+      "process": {
+        "event": "bench.process",
+        "userCpuMs": 343.453,
+        "systemCpuMs": 68.751,
+        "maxRssKiB": 90704,
+        "eventLoopActiveMs": 222.93601202729036,
+        "eventLoopIdleMs": 273.442572,
+        "eventLoopUtilization": 0.4491249606671862
+      }
+    },
+    {
+      "run": 2,
+      "scenarios": {
+        "technicianQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 8.00445800000034,
+            "p95": 9.265792000000147,
+            "p99": 9.908500000000004
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 7.4826249999999845,
+            "p95": 8.619999999999976,
+            "p99": 9.050375000000031
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "residentQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 2.107082999999875,
+            "p95": 3.053957999999966,
+            "p99": 3.5233750000002146
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 1.658457999999996,
+            "p95": 2.5411659999999756,
+            "p99": 3.0565409999999815
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "claim": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.3686250000000655,
+            "p95": 4.528249999999844,
+            "p99": 5.00854100000015
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 3.0543749999999363,
+            "p95": 4.06758300000007,
+            "p99": 4.160707999999943
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        },
+        "resolve": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.3021249999997053,
+            "p95": 4.838583000000199,
+            "p99": 5.349291999999878
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 2.9507079999999632,
+            "p95": 4.430083999999965,
+            "p99": 4.977665999999999
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        }
+      },
+      "process": {
+        "event": "bench.process",
+        "userCpuMs": 302.323,
+        "systemCpuMs": 61.543,
+        "maxRssKiB": 86560,
+        "eventLoopActiveMs": 212.76741998331067,
+        "eventLoopIdleMs": 266.71883,
+        "eventLoopUtilization": 0.44374039921002195
+      }
+    },
+    {
+      "run": 3,
+      "scenarios": {
+        "technicianQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 7.757624999999734,
+            "p95": 9.134125000000495,
+            "p99": 10.014583999999559
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 7.35499999999999,
+            "p95": 8.682583000000022,
+            "p99": 9.305124999999975
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "residentQueue": {
+          "httpMs": {
+            "count": 240,
+            "p50": 1.9506660000006377,
+            "p95": 3.2326249999996435,
+            "p99": 3.688458000000537
+          },
+          "sqlMs": {
+            "count": 240,
+            "p50": 1.5899589999999648,
+            "p95": 2.5734580000000165,
+            "p99": 3.063541999999984
+          },
+          "queriesPerRequest": [
+            1
+          ]
+        },
+        "claim": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.4747919999999795,
+            "p95": 5.233959000000141,
+            "p99": 6.902625000000626
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 3.0680000000000405,
+            "p95": 4.655209999999784,
+            "p99": 5.802666000000045
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        },
+        "resolve": {
+          "httpMs": {
+            "count": 120,
+            "p50": 3.3786249999993743,
+            "p95": 5.605499999999665,
+            "p99": 6.351708000000144
+          },
+          "sqlMs": {
+            "count": 120,
+            "p50": 2.980832000000021,
+            "p95": 5.075708000000191,
+            "p99": 5.450124999999957
+          },
+          "queriesPerRequest": [
+            5
+          ]
+        }
+      },
+      "process": {
+        "event": "bench.process",
+        "userCpuMs": 316.137,
+        "systemCpuMs": 63.873,
+        "maxRssKiB": 86128,
+        "eventLoopActiveMs": 216.09584099695587,
+        "eventLoopIdleMs": 263.939076,
+        "eventLoopUtilization": 0.45016692191648683
+      }
+    }
+  ]
+}

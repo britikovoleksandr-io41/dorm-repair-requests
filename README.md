@@ -32,27 +32,33 @@
 
 ## Локальний запуск
 
-Потрібні Node.js 22.15+ або 24 і npm.
+Потрібні Node.js 22.15+ або 24, npm і PostgreSQL 17. Для Git hooks і стандартних перевірок:
 
 ```sh
 npm ci
 npm run hooks:install
 npm run check
-npm start
 ```
 
-`GET /health` перевіряє, що HTTP-процес відповідає. Код, технічна документація й перевірки підготовлені за участю OpenAI Codex на основі опису проєкту та завдань курсу. Робочі інженерні рішення потребують погодження студента.
-
-Для PostgreSQL вкажіть `DATABASE_URL`, зберіть код, застосуйте схему й налаштуйте `ACTOR_TOKENS`. Перед запуском додайте до `users` ID і ролі всіх налаштованих акторів. Значення токенів зберігайте в зовнішній конфігурації. Повний API на даних у пам'яті доступний у локальній гілці `feature/lab-02-static-api`.
+Вкажіть `DATABASE_URL` для локальної бази, потім застосуйте міграції. Приклад для порожньої локальної бази з встановленим `psql`:
 
 ```sh
-npm run build
 npm run migrate
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c \
+  "INSERT INTO users (id, role) VALUES ('resident-1', 'resident'), ('resident-2', 'resident'),
+   ('tech-1', 'technician'), ('tech-2', 'technician') ON CONFLICT DO NOTHING;"
+export ACTOR_TOKENS="$(node --input-type=module -e 'import { actors } from "./test/actors.js"; console.log(JSON.stringify(Object.values(actors)))')"
 npm start
-npm run verify:db
 ```
 
-`verify:db` піднімає ізольований PostgreSQL у Docker, якщо `DATABASE_URL` не задано. За наявності URL вказуйте окрему тестову БД. Контракт описано у [spec.md](spec.md).
+```sh
+curl http://127.0.0.1:3000/health
+curl -H 'Authorization: Bearer fixture_resident_one_0000001' http://127.0.0.1:3000/requests
+```
+
+`ACTOR_TOKENS` у прикладі містить публічні тестові токени, придатні лише для локальних даних. В іншому середовищі зберігайте власні значення в секретах. `npm run verify:db` піднімає ізольований PostgreSQL у Docker, якщо `DATABASE_URL` не задано. Для перевірки з указаним URL використовуйте окрему тестову БД. Повний API на даних у пам'яті доступний у локальній гілці `feature/lab-02-static-api`. [Контракт API](spec.md).
+
+Код, технічна документація й перевірки підготовлені за участю OpenAI Codex на основі опису проєкту та завдань курсу. Робочі інженерні рішення потребують погодження студента.
 
 ## Тести
 
@@ -61,3 +67,7 @@ npm run verify:db
 ## Контейнер і staging
 
 `docker build --build-arg APP_SHA="$(git rev-parse HEAD)" .` збирає образ. У контейнері застосовуються структурні міграції, `/ready` перевіряє залежність від БД, `/version` повертає SHA збірки. Для домашнього запуску та staging потрібні окремі PostgreSQL і токени. [Налаштування GitHub і staging](evidence/lab04-staging.md).
+
+## Навантаження
+
+`make load` і `make profile` створюють окрему базу Docker, засівають однакові дані й показують три повтори. Для вимірів програма перевіряє SHA через `/version`. На наявній базі після міграцій можна окремо запустити `npm run db:indexes` з відповідним `DATABASE_URL`. Публічний контракт читання черги входить до workspace `@dorm/repair-queue`.

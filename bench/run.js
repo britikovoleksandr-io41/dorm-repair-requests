@@ -9,7 +9,8 @@ import { createInterface } from 'node:readline';
 import pg from 'pg';
 import { migrate } from '../dist/migrations.js';
 import { createDatabase } from '../dist/database.js';
-import { queueSql } from '../dist/postgres.js';
+import { queueSql } from '../dist/postgres-queue.js';
+import { ensureQueueIndex } from '../dist/queue-index.js';
 import { actors } from '../test/actors.js';
 import { actionsPerRun, fixtureId, repetitions, seed } from './fixtures.js';
 
@@ -263,9 +264,19 @@ const database = new pg.Client({
 await database.connect();
 let fixture;
 let plans;
+let index;
 try {
   await migrate(schema);
   fixture = await seed(database);
+  const indexStart = performance.now();
+  const indexResult = await ensureQueueIndex(database);
+  const indexBuildMs = performance.now() - indexStart;
+  const {
+    rows: [size],
+  } = await database.query(
+    "SELECT pg_relation_size('repair_requests_status_category_order')::int AS bytes",
+  );
+  index = { result: indexResult, buildMs: indexBuildMs, bytes: size.bytes };
   plans = {};
   for (const [name, owner] of [
     ['technicianQueue', null],
@@ -291,6 +302,7 @@ console.log(
       revision,
       mode,
       fixture,
+      index,
       concurrency,
       warmupReads: 32,
       env: {

@@ -2,7 +2,7 @@ import { initiator } from './context.js';
 import { AppError } from './errors.js';
 import { nextStatus } from './policy.js';
 
-export function repairService(repository, log) {
+export function repairService({ repository, queue, log }) {
   function visibleOwner(actor) {
     return actor.role === 'resident' ? actor.id : null;
   }
@@ -27,9 +27,9 @@ export function repairService(repository, log) {
 
     async list(filters) {
       log('queue.read');
-      const items = await repository.list(visibleOwner(initiator()), filters);
-      log('queue.read.done', { rows: items.length });
-      return { items };
+      const page = await queue.list(initiator(), filters);
+      log('queue.read.done', { rows: page.items.length });
+      return page;
     },
 
     async detail(id) {

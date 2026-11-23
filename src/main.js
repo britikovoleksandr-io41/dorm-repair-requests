@@ -1,8 +1,10 @@
+import { createRepairQueue } from '@dorm/repair-queue';
 import { createAuthenticator } from './auth.js';
 import { makeLogger } from './context.js';
 import { createDatabase } from './database.js';
 import { createHttpServer } from './http.js';
 import { migrate } from './migrations.js';
+import { postgresQueueReader } from './postgres-queue.js';
 import { postgresRepository } from './postgres.js';
 import { repairService } from './service.js';
 
@@ -29,7 +31,12 @@ try {
   throw error;
 }
 
-const service = repairService(postgresRepository(db), log);
+const queue = createRepairQueue(postgresQueueReader(db));
+const service = repairService({
+  repository: postgresRepository(db),
+  queue,
+  log,
+});
 const server = createHttpServer({
   authenticate,
   service,
