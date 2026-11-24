@@ -1,0 +1,17 @@
+$ npm run build
+
+> dorm-repair-requests@0.1.0 build
+> tsc
+
+$ env -u DATABASE_URL sh scripts/with-db.sh node --test submission/verify-lab02.js
+✔ replacement process reads a new token configuration (262.665875ms)
+✔ inserting a newer item shifts an OFFSET page (124.100042ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.944209
+verification exit=0
