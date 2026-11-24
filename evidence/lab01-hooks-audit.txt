@@ -1,0 +1,56 @@
+$ sh submission/verify-hooks.sh
+Fresh fixture checkout has no active project hooks
+npm warn deprecated eslint@9.39.3: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 89 packages in 356ms
+
+> dorm-repair-requests@0.1.0 hooks:install
+> sh scripts/install-hooks.sh
+
+Both project hooks installed
+
+> dorm-repair-requests@0.1.0 check
+> npm run format:check && npm run lint && npm run build && npm run smoke
+
+
+> dorm-repair-requests@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> dorm-repair-requests@0.1.0 lint
+> eslint .
+
+
+> dorm-repair-requests@0.1.0 build
+> tsc
+
+
+> dorm-repair-requests@0.1.0 smoke
+> node --test test/smoke.test.js
+
+✔ built service answers GET /health and rejects unknown routes (95.2445ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 168.798333
+Clean pre-push exit=0
+
+> dorm-repair-requests@0.1.0 check
+> npm run format:check && npm run lint && npm run build && npm run smoke
+
+
+> dorm-repair-requests@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+[warn] src/negative.js
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.
+Intentional negative pre-push exit=1
+Hook checked the supplied SHA while the fixture working tree stayed clean
+verification exit=0
